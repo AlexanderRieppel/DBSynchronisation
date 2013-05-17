@@ -17,9 +17,9 @@ import javax.swing.Box;
 public class MySQLConnector extends JFrame 
 {
    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-   static final String DATABASE_URL = "jdbc:mysql://localhost/tvprog_4ahits";
-   static final String USERNAME= "alex";
-   static final String PASSWORD= "class";
+   static final String DATABASE_URL = "jdbc:mysql://127.0.0.1/tvprog";
+   static final String USERNAME= "root";
+   static final String PASSWORD= "root";
    
    static final String DEFAULT_QUERY = "SELECT * FROM genre";
    
@@ -128,7 +128,7 @@ public class MySQLConnector extends JFrame
    
    public static void main( String args[] ) 
    {
-      new MySQLConnector();     
+      new MySQLConnector();    
    }
 }
 
