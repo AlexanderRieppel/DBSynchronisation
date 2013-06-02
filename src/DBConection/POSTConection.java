@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import org.postgresql.PGNotification;
+
 
 public class POSTConection {
 	private String jdriv = "org.postgresql.Driver", url = "jdbc:postgresql://10.0.0.16/tgmbank", uname = "postgres", pwd ="HalliGalli15", dquary = "SELECT * FROM konto";
