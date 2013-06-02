@@ -9,8 +9,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 
-public class MYSQLConection {
-	private String jdriv = "com.mysql.jdbc.Driver", url = "jdbc:mysql://10.0.0.16/tgmbank", uname = "root", pwd ="HalliGalli15", dquary = "SELECT * FROM konto";
+public class POSTConection {
+	private String jdriv = "org.postgresql.Driver", url = "jdbc:postgresql://10.0.0.16/tgmbank", uname = "postgres", pwd ="HalliGalli15", dquary = "SELECT * FROM konto";
 	
 	private Connection con;
 	private Statement st;
@@ -19,12 +19,12 @@ public class MYSQLConection {
 	
 	private boolean connected = false;
 	
-	public MYSQLConection() throws ClassNotFoundException, SQLException{
-		System.out.println("Mysql Treiber wird geladen......");
+	public POSTConection() throws ClassNotFoundException, SQLException{
+		System.out.println("Postgres Treiber wird geladen......");
 		
 		Class.forName(jdriv);
 		
-		System.out.println("Mysql wird verbunden......");
+		System.out.println("Postgres wird verbunden......");
 		con = DriverManager.getConnection(url , uname, pwd);
 		
 		st = con.createStatement( 
@@ -33,7 +33,7 @@ public class MYSQLConection {
 		
 		connected = true;
 		
-		System.out.println("Mysql conected!");
+		System.out.println("Postgres conected!");
 		
 	}
 }
