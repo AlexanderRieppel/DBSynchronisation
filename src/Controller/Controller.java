@@ -8,8 +8,10 @@ import DBConection.POSTConection;
 public class Controller {
 	public static void main(String[] args){
 		try {
-			new MYSQLConection();
+			MYSQLConection m = new MYSQLConection();
 			new POSTConection();
+			Thread t = new Thread(m);
+			t.start();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

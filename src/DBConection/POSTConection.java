@@ -12,7 +12,7 @@ import org.postgresql.PGNotification;
 
 
 public class POSTConection {
-	private String jdriv = "org.postgresql.Driver", url = "jdbc:postgresql://10.0.0.16/tgmbank", uname = "postgres", pwd ="HalliGalli15", dquary = "SELECT * FROM konto";
+	private String jdriv = "org.postgresql.Driver", url = "jdbc:postgresql://127.0.0.1/tgmbank", uname = "postgres", pwd ="HalliGalli15", dquary = "SELECT * FROM konto";
 	
 	private Connection con;
 	private Statement st;
