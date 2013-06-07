@@ -12,50 +12,49 @@ import java.util.ArrayList;
 import javax.sql.rowset.JdbcRowSet;
 
 
-import Listener.Listener;
-
-import com.mysql.jdbc.Driver;
-import com.sun.rowset.JdbcRowSetImpl;
-
 
 public class MYSQLConection implements Runnable{
-	private String jdriv = "com.mysql.jdbc.Driver", url = "jdbc:mysql://127.0.0.1/tgmbank", uname = "root", pwd ="HalliGalli15";
-	private String dquary = "show tables";
+	private String jdriv = "com.mysql.jdbc.Driver", url, uname , pwd, dbname;
 	private ArrayList<String> tab = new ArrayList<String>();
 	
 	private Connection con;
 	private Statement st;
 	private ResultSet rs;
-	private ResultSetMetaData rsmd;
-	private JdbcRowSet rows;
 	
 	private boolean connected = false;
 	
-	public MYSQLConection() throws ClassNotFoundException, SQLException{
+	public MYSQLConection(String url, String dbname, String uname, String pwd) {
+		this.url = "jdbc:mysql://" + url + "/" + dbname;
+		this.uname = uname;
+		this.pwd = pwd;
+		this.dbname = dbname;
+	}
+	public void connect()throws ClassNotFoundException, SQLException{
 		System.out.println("Mysql Treiber wird geladen......");
 		
-		Class.forName(jdriv);
+		Class.forName(this.jdriv);
 		
 		System.out.println("Mysql wird verbunden......");
-		con = DriverManager.getConnection(url , uname, pwd);
+		con = DriverManager.getConnection(this.url , this.uname, this.pwd);
 		
 		st = con.createStatement( 
 		         ResultSet.TYPE_SCROLL_SENSITIVE,
 		         ResultSet.CONCUR_UPDATABLE);
 		
-		connected = true;
+		this.connected = true;
 		
 		System.out.println("Mysql conected!");
-		rs = st.executeQuery(dquary);
-		this.getTables();
-		for(int i = 0; i < tab.size();i++){
-			System.out.println(tab.get(i));
-		}
+		System.out.println("Es wird Datenbank " + dbname + " verwendet!");
 	}
-	public void getTables() throws SQLException{
-		do{
+	public ArrayList<String> getTables() throws SQLException{
+		rs = st.executeQuery("show tables");
+		while(rs.next()){
 			tab.add(rs.getString(1));
-		}while(rs.next());
+		}
+		return tab;
+	}
+	public ResultSetMetaData getMeta(String tabn) throws SQLException{
+		return st.executeQuery("SELECT * FROM " + tabn).getMetaData(); 
 	}
 
 	@Override
@@ -64,14 +63,12 @@ public class MYSQLConection implements Runnable{
 		while(!Thread.interrupted()){
 			ResultSet rs1;
 			try {
-				rs1 = st.executeQuery(dquary);
+				//rs1 = st.executeQuery(dquary);
 				
-					System.out.println("Mysql eine neue änderung!");
+					//System.out.println("Mysql eine neue änderung!");
 					//Thread.sleep(9999999);
 				
 				Thread.sleep(100);
-			} catch (SQLException e) {
-				System.err.println("ERROR 01: " + e.getMessage());
 			} catch (InterruptedException e) {
 				System.err.println("ERROR 02: " + e.getMessage());
 			}

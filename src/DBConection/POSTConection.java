@@ -7,12 +7,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.postgresql.PGNotification;
 
 
-public class POSTConection {
-	private String jdriv = "org.postgresql.Driver", url = "jdbc:postgresql://127.0.0.1/tgmbank", uname = "postgres", pwd ="HalliGalli15", dquary = "SELECT * FROM konto";
+public class POSTConection implements Runnable{
+	private String jdriv = "org.postgresql.Driver", url, uname , pwd, dbname;
+	private ArrayList<String> tab = new ArrayList<String>();
 	
 	private Connection con;
 	private Statement st;
@@ -21,7 +23,13 @@ public class POSTConection {
 	
 	private boolean connected = false;
 	
-	public POSTConection() throws ClassNotFoundException, SQLException{
+	public POSTConection(String url, String dbname, String uname, String pwd) throws ClassNotFoundException, SQLException{
+		this.url = "jdbc:postgresql://" + url + "/" + dbname;
+		this.uname = uname;
+		this.pwd = pwd;
+		this.dbname = dbname;
+	}
+	public void connect()throws ClassNotFoundException, SQLException{
 		System.out.println("Postgres Treiber wird geladen......");
 		
 		Class.forName(jdriv);
@@ -36,6 +44,21 @@ public class POSTConection {
 		connected = true;
 		
 		System.out.println("Postgres conected!");
+		System.out.println("Es wird Datenbank " + dbname + " verwendet!");
+	}
+	public ArrayList<String> getTables() throws SQLException{
+		rs = st.executeQuery("\\d");
+		while(rs.next()){
+			tab.add(rs.getString(1));
+		}
+		return tab;
+	}
+	public ResultSetMetaData getMeta(String tabn) throws SQLException{
+		return st.executeQuery("SELECT * FROM " + tabn).getMetaData(); 
+	}
+	@Override
+	public void run() {
+		
 		
 	}
 }
