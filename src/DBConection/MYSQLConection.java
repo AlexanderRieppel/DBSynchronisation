@@ -2,6 +2,7 @@ package DBConection;
 
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.Statement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,24 +12,31 @@ import java.util.ArrayList;
 
 import javax.sql.rowset.JdbcRowSet;
 
+import Controller.Controller;
 
 
-public class MYSQLConection implements Runnable{
+
+public class MYSQLConection implements Conection{
 	private String jdriv = "com.mysql.jdbc.Driver", url, uname , pwd, dbname;
 	private ArrayList<String> tab = new ArrayList<String>();
+	private ArrayList<Integer> tabc = new ArrayList<Integer>();
 	
 	private Connection con;
 	private Statement st;
 	private ResultSet rs;
+	private Controller c;
 	
 	private boolean connected = false;
 	
-	public MYSQLConection(String url, String dbname, String uname, String pwd) {
+	public MYSQLConection(String url, String dbname, String uname, String pwd,Controller c) {
 		this.url = "jdbc:mysql://" + url + "/" + dbname;
 		this.uname = uname;
 		this.pwd = pwd;
 		this.dbname = dbname;
+		this.c = c;
 	}
+	
+	@Override
 	public void connect()throws ClassNotFoundException, SQLException{
 		System.out.println("Mysql Treiber wird geladen......");
 		
@@ -46,6 +54,12 @@ public class MYSQLConection implements Runnable{
 		System.out.println("Mysql conected!");
 		System.out.println("Es wird Datenbank " + dbname + " verwendet!");
 	}
+	
+	@Override
+	public void setC(int id, int wert){
+		tabc.set(id, wert);
+	}
+	@Override
 	public ArrayList<String> getTables() throws SQLException{
 		rs = st.executeQuery("show tables");
 		while(rs.next()){
@@ -53,26 +67,66 @@ public class MYSQLConection implements Runnable{
 		}
 		return tab;
 	}
+	
+	@Override
 	public ResultSetMetaData getMeta(String tabn) throws SQLException{
 		return st.executeQuery("SELECT * FROM " + tabn).getMetaData(); 
 	}
-
+	
+	@Override
+	public ResultSet exeQuarry(String q) throws SQLException {
+		return st.executeQuery(q);
+	}
+	
+	@Override
+	public int exeUpdate(String q) throws SQLException{
+		return st.executeUpdate(q);
+	}
+	
+	@Override
+	public void initTC() throws SQLException{
+		for(int i =0;i < tab.size();i++){
+			ResultSet rs = this.exeQuarry("SELECT count(*) FROM " + tab.get(i));
+			rs.next();
+			tabc.add(i, rs.getInt(1));
+		}
+	}
+	
 	@Override
 	public void run() {
 		System.out.println("Mysql Check gestartet!");
 		while(!Thread.interrupted()){
 			ResultSet rs1;
 			try {
-				//rs1 = st.executeQuery(dquary);
-				
-					//System.out.println("Mysql eine neue änderung!");
-					//Thread.sleep(9999999);
-				
-				Thread.sleep(100);
+				for(int i  = 0; i < tab.size();i++){
+					rs1 = this.exeQuarry("SELECT count(*) FROM " + tab.get(i));
+					rs1.next();
+					if(rs1.getInt(1) < tabc.get(i)){
+						System.out.println("Hallo 3");
+						tabc.set(i,rs1.getInt(1));
+						c.setPOSTC(i,rs1.getInt(1));
+						c.match(true, false, tab.get(i));
+						
+					}else if(rs1.getInt(1) > tabc.get(i)){
+						System.out.println("Hallo 4");
+						tabc.set(i,rs1.getInt(1));
+						c.setPOSTC(i,rs1.getInt(1));
+						c.match(true, true, tab.get(i));
+					}
+				}
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				System.err.println("ERROR 02: " + e.getMessage());
+			} catch (SQLException e) {
+				System.err.println("ERROR MYSQL CHECK:" + e.getMessage());
 			}
 		}
 		
 	}
+
+	@Override
+	public DatabaseMetaData getMe() throws SQLException {
+		return con.getMetaData();
+	}
+	
 }
