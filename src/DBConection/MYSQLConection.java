@@ -16,8 +16,8 @@ import Controller.Controller;
 
 
 /**
- * Conection für eine MySQL Datenbank
- * @author Dominik Backhasuen
+ * Connection für eine MySQL Datenbank
+ * @author Dominik Backhausen, Alexander Rieppel
  * @version 0.1
  */
 public class MYSQLConection implements Conection{
@@ -32,12 +32,12 @@ public class MYSQLConection implements Conection{
 	
 	private boolean connected = false;
 	/**
-	 * Konstruktor zum erstellen einer MySQL Conection
-	 * @param url IP-addresse oder Hostname des Datenbank Servers
-	 * @param dbname Datenbank name
-	 * @param uname benutzername zum einloggen auf dem server
-	 * @param pwd passwort zum einloggen auf dem server
-	 * @param c Controller um mit der anderen Verbindung comunizieren zu können
+	 * Konstruktor zum Erstellen einer MySQL Connection
+	 * @param url IP-Addresse oder Hostname des Datenbank Servers
+	 * @param dbname Datenbank Name
+	 * @param uname Benutzername zum Einloggen auf dem Server
+	 * @param pwd Passwort zum Einloggen auf dem Server
+	 * @param c Controller um mit der anderen Verbindung kommunizieren zu können
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */

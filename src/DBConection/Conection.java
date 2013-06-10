@@ -6,7 +6,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 /**
- * Dies Interface gibt die Conection für die Datenbanken vor
+ * Dieses Interface gibt die Connection für die Datenbanken vor
  * @author Dominik Backhausen
  * @version 0.1
  */
@@ -19,7 +19,7 @@ public interface Conection extends Runnable{
 	public void connect()throws ClassNotFoundException, SQLException;
 	/**
 	 * Gibt die Tabellen Namen zurück die sich in Der Datenbank befinden
-	 * @return Liste von TabellenNamen
+	 * @return Liste von Tabellennamen
 	 * @throws SQLException
 	 */
 	public ArrayList<String> getTables() throws SQLException;
@@ -31,21 +31,21 @@ public interface Conection extends Runnable{
 	 */
 	public ResultSetMetaData getMeta(String tabn) throws SQLException;
 	/**
-	 * Fürrt eine Quarry aus und gibt ein Resultset zurück
-	 * @param q die auszuführende Quarry
-	 * @return das Ergebniss der Quarry
+	 * Führt eine Query aus und gibt ein Resultset zurück
+	 * @param q die auszuführende Query
+	 * @return das Ergebniss der Query
 	 * @throws SQLException
 	 */
 	public ResultSet exeQuarry(String q)throws SQLException;
 	/**
-	 * Führt ein Update aus und gibt die anzahl der änderungen zurück
+	 * Führt ein Update aus und gibt die Anzahl der Änderungen zurück
 	 * @param q Updatebefehl
-	 * @return anzahl der Änderungen
+	 * @return Anzahl der Änderungen
 	 * @throws SQLException
 	 */
 	public int exeUpdate(String q)throws SQLException;
 	/**
-	 * Initialisiert den Zahler für die Tabeleneinträge
+	 * Initialisiert den Zähler für die Tabelleneinträge
 	 * @throws SQLException
 	 */
 	public void initTC()throws SQLException;
@@ -56,7 +56,7 @@ public interface Conection extends Runnable{
 	 */
 	public DatabaseMetaData getMe() throws SQLException;
 	/**
-	 * Setzt die tabellenzeilen Zähler für eine bestimmte Tabelle
+	 * Setzt die Tabellenzeilen Zähler für eine bestimmte Tabelle
 	 * @param id index der Tabelle
 	 * @param wert neuer wert
 	 */

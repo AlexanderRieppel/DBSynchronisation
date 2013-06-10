@@ -12,8 +12,8 @@ import DBConection.MYSQLConection;
 import DBConection.POSTConection;
 /**
  * Diese Klasse ist die Hauptklasse des Programms und wird als erste gestartet
- * Sie Übernimmt unter anderem die Komunication und Verwalltung zwischen den Conections sowie die Hauptaufgabe des Synkronisierens und Überprüfens
- * @author Dominik Backhausen
+ * Sie Übernimmt unter anderem die Kommunikation und Verwaltung der Connections sowie die Hauptaufgaben der Synchronisation und Überprüfung
+ * @author Dominik Backhausen, Alexander Rieppel
  * @version 0.1
  */
 public class Controller {
@@ -23,8 +23,8 @@ public class Controller {
 		new Controller();
 	}
 	/**
-	 * Der Hauptkonstruktor zum erstellen eines Controllers
-	 * Erstellt die Conections, baut die verbindung auf macht einen tabbelencheck und startet die threads
+	 * Konstruktor zum Erstellen eines Controllers
+	 * Erstellt die Connections, baut die Verbindung auf, macht einen Tabellencheck und startet die Threads
 	 */
 	public Controller(){
 		try {
@@ -49,7 +49,7 @@ public class Controller {
 		}
 	}
 	/**
-	 * Um die Count anzahl in MYSQL Conection zu Ändern
+	 * Um die Count Anzahl in MYSQL Connection zu ändern
 	 * @param id Position in der Liste
 	 * @param wert neuer wert
 	 */
@@ -57,7 +57,7 @@ public class Controller {
 		m.setC(id, wert);
 	}
 	/**
-	 * Um die Count anzahl in Postgres Conection zu Ändern
+	 * Um die Count Anzahl in Postgres Connection zu ändern
 	 * @param id Position in der Liste
 	 * @param wert neuer wert
 	 */
@@ -65,7 +65,7 @@ public class Controller {
 		p.setC(id, wert);
 	}
 	/**
-	 * Überprüft alle Tabellen ob sie zuammenpassen von Namen und Struktur
+	 * Überprüft alle Tabellen ob sie von Name und Struktur her zusammenpassen 
 	 * @throws SQLException
 	 */
 	public void compareTabels() throws SQLException{
@@ -102,11 +102,11 @@ public class Controller {
 		}
 	}
 	/**
-	 * Diese Methode wird aufgerufen um die Tabellen zu syncronisieren
-	 * Mithilfe von abfragen wird ermittelt welche datensätze unterschiedlich sind und somit wird die andere Datenbank entsprächend angepasst
+	 * Diese Methode wird aufgerufen um die Tabellen zu synchronisieren
+	 * Mit Hilfe von Abfragen wird ermittelt welche Datensätze unterschiedlich sind und somit wird die andere Datenbank entsprechend angepasst
 	 * @param mainmysql gibt an ob die Quelle MySQL oder Postgres sein soll
 	 * @param insert gibt an ob ein Insert oder ein Delete Benötigt wird
-	 * @param tabn Gibt den Namen der Tabelle an in der es Änderungen gab
+	 * @param tabn gibt den Namen der Tabelle an in der es Änderungen gab
 	 * @throws SQLException SQL Fehler
 	 */
 	public void match(boolean mainmysql, boolean insert, String tabn) throws SQLException{
@@ -125,11 +125,11 @@ public class Controller {
 				primid = i;
 			}
 		}
-		//Abfrage geordnet nach Primary Key um sicherzustellen das beide inhalte gleich geordnet sind
+		//Abfrage geordnet nach Primary Key um sicherzustellen, dass beide Inhalte gleich geordnet sind
 		mrs = m.exeQuarry("SELECT * FROM " + tabn + " ORDER BY " + mrsm.getColumnName(primid));
 		prs = p.exeQuarry("SELECT * FROM " + tabn + " ORDER BY " + prsm.getColumnName(primid));
 		if(primid > 0){
-			//Syncronisation für benötigten INsert
+			//Synchronisation für benötigten Insert
 			if(insert == true){
 				if(mainmysql == true){
 					int durch = 0;
@@ -183,7 +183,7 @@ public class Controller {
 						
 					}
 				}
-				//Syncronisation für benötigten Update
+				//Synchronisation für benötigtes Update
 			}else if(insert == false){
 				if(mainmysql == true){
 					int durch = 0;
