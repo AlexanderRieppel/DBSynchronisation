@@ -20,17 +20,49 @@ public class Controller {
 	private Conection m, p;
 	
 	public static void main(String[] args){
-		new Controller();
-	}
+		boolean a = true;
+		String mun = "", mup ="", mip ="", mdb ="", pun ="", pup ="", pip ="", pdb ="";
+		if(args.length > 0)
+			if(args[0].charAt(0) == 'd'){
+				a = false;
+				mip = "localhost";
+				mun = "root";
+				mup = "root";
+				mdb = "tgmbank";
+				pip = "localhost";
+				pun = "postgres";
+				pup = "postgres";
+				pdb = "tgmbank";
+			}else{
+				if(args.length == 8){
+					a = false;
+					mip = args[0];
+					mun = args[3];
+					mup = args[4];
+					mdb = args[2];
+					pip = args[5];
+					pun = args[7];
+					pup = args[8];
+					pdb = args[6];
+				}
+			}
+		
+		if(a)
+			System.out.println("Falsche eingabe! \n Bitte Server informationen angeben eingeben:\n " +
+					"<MYSQL Ip-Addrese/hostname> <MYSQL Datenbank> <MYSQL UserName> <MYSQL Passwort> " +
+					"<Postgres Ip-Addrese/hostname> <Postgres Datenbank> <Postgres UserName> <postgres Passwort>   \n d defaultwert");
+		else
+			new Controller(mip,pip,mdb,pdb,mun,pun,mup,pup);
+		}
 	/**
 	 * Konstruktor zum Erstellen eines Controllers
 	 * Erstellt die Connections, baut die Verbindung auf, macht einen Tabellencheck und startet die Threads
 	 */
-	public Controller(){
+	public Controller(String mip, String pip, String mdb, String pdb, String mun, String pun, String mup, String pup){
 		try {
-			m = new MYSQLConection("10.0.0.16", "tgmbank","root", "HalliGalli15",this);
+			m = new MYSQLConection(mip, mdb,mun, mup,this);
 			m.connect();
-			p = new POSTConection("10.0.0.16", "tgmbank","postgres", "HalliGalli15",this);
+			p = new POSTConection(pip, pdb,pun, pup,this);
 			p.connect();
 			//p.getTables();
 			this.compareTabels();
