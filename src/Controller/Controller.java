@@ -10,12 +10,22 @@ import java.util.Collections;
 import DBConection.Conection;
 import DBConection.MYSQLConection;
 import DBConection.POSTConection;
-
+/**
+ * Diese Klasse ist die Hauptklasse des Programms und wird als erste gestartet
+ * Sie Übernimmt unter anderem die Komunication und Verwalltung zwischen den Conections sowie die Hauptaufgabe des Synkronisierens und Überprüfens
+ * @author Dominik Backhausen
+ * @version 0.1
+ */
 public class Controller {
 	private Conection m, p;
+	
 	public static void main(String[] args){
 		new Controller();
 	}
+	/**
+	 * Der Hauptkonstruktor zum erstellen eines Controllers
+	 * Erstellt die Conections, baut die verbindung auf macht einen tabbelencheck und startet die threads
+	 */
 	public Controller(){
 		try {
 			m = new MYSQLConection("10.0.0.16", "tgmbank","root", "HalliGalli15",this);
@@ -38,12 +48,26 @@ public class Controller {
 			//e.printStackTrace();
 		}
 	}
+	/**
+	 * Um die Count anzahl in MYSQL Conection zu Ändern
+	 * @param id Position in der Liste
+	 * @param wert neuer wert
+	 */
 	public void setMYSQLC(int id, int wert){
 		m.setC(id, wert);
 	}
+	/**
+	 * Um die Count anzahl in Postgres Conection zu Ändern
+	 * @param id Position in der Liste
+	 * @param wert neuer wert
+	 */
 	public void setPOSTC(int id, int wert){
 		p.setC(id, wert);
 	}
+	/**
+	 * Überprüft alle Tabellen ob sie zuammenpassen von Namen und Struktur
+	 * @throws SQLException
+	 */
 	public void compareTabels() throws SQLException{
 		ArrayList<String> mtab = m.getTables();
 		ArrayList<String> ptab = p.getTables();
@@ -77,7 +101,14 @@ public class Controller {
 			}
 		}
 	}
-	
+	/**
+	 * Diese Methode wird aufgerufen um die Tabellen zu syncronisieren
+	 * Mithilfe von abfragen wird ermittelt welche datensätze unterschiedlich sind und somit wird die andere Datenbank entsprächend angepasst
+	 * @param mainmysql gibt an ob die Quelle MySQL oder Postgres sein soll
+	 * @param insert gibt an ob ein Insert oder ein Delete Benötigt wird
+	 * @param tabn Gibt den Namen der Tabelle an in der es Änderungen gab
+	 * @throws SQLException SQL Fehler
+	 */
 	public void match(boolean mainmysql, boolean insert, String tabn) throws SQLException{
 		ResultSet mrs = m.exeQuarry("SELECT * FROM " + tabn);
 		ResultSet prs = p.exeQuarry("SELECT * FROM " + tabn);
@@ -86,6 +117,7 @@ public class Controller {
 		DatabaseMetaData meta = m.getMe();
 		ResultSet prim = meta.getPrimaryKeys(null, null, tabn);
 		prim.next();
+		//Sucht den Primary Key in der Tabelle
 		String pmr = prim.getString(4);
 		int primid = 0;
 		for(int i = 1; i <= mrsm.getColumnCount();i++){
@@ -93,9 +125,11 @@ public class Controller {
 				primid = i;
 			}
 		}
+		//Abfrage geordnet nach Primary Key um sicherzustellen das beide inhalte gleich geordnet sind
 		mrs = m.exeQuarry("SELECT * FROM " + tabn + " ORDER BY " + mrsm.getColumnName(primid));
 		prs = p.exeQuarry("SELECT * FROM " + tabn + " ORDER BY " + prsm.getColumnName(primid));
 		if(primid > 0){
+			//Syncronisation für benötigten INsert
 			if(insert == true){
 				if(mainmysql == true){
 					int durch = 0;
@@ -118,7 +152,6 @@ public class Controller {
 									qu += ",";
 							}
 							qu+=")";
-							//System.out.println(qu);
 							p.exeUpdate(qu);
 						}
 						durch ++;
@@ -145,12 +178,12 @@ public class Controller {
 							}
 							qu+=")";
 							m.exeUpdate(qu);
-							
 						}
 						durch ++;
 						
 					}
 				}
+				//Syncronisation für benötigten Update
 			}else if(insert == false){
 				if(mainmysql == true){
 					int durch = 0;
@@ -162,7 +195,6 @@ public class Controller {
 							pb = prs.next();
 						if(pb == true && mb == true){
 							if(mrs.getInt(primid) != prs.getInt(primid)){
-								//System.out.println(prsm.getColumnName(primid));
 								p.exeUpdate("DELETE FROM " + tabn + " WHERE " + prsm.getColumnName(primid) + " = " + prs.getInt(primid));
 							}
 							
@@ -181,7 +213,6 @@ public class Controller {
 							mb = mrs.next();
 						if(pb == true && mb == true){
 							if(mrs.getInt(primid) != prs.getInt(primid)){
-								//System.out.println(prsm.getColumnName(primid));
 								m.exeUpdate("DELETE FROM " + tabn + " WHERE " + prsm.getColumnName(primid) + " = " + prs.getInt(primid));
 							}
 							

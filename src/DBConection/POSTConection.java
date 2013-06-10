@@ -13,7 +13,11 @@ import java.util.ArrayList;
 import Controller.Controller;
 
 
-
+/**
+ * Conection für eine Postgres Datenbank
+ * @author Dominik Backhasuen
+ * @version 0.1
+ */
 public class POSTConection implements Conection{
 	private String jdriv = "org.postgresql.Driver", url, uname , pwd, dbname;
 	private ArrayList<String> tab = new ArrayList<String>();
@@ -24,7 +28,16 @@ public class POSTConection implements Conection{
 	private ResultSet rs;
 	private Controller c;
 	
-	
+	/**
+	 * Konstruktor zum erstellen einer Postgres Conection
+	 * @param url IP-addresse oder Hostname des Datenbank Servers
+	 * @param dbname Datenbank name
+	 * @param uname benutzername zum einloggen auf dem server
+	 * @param pwd passwort zum einloggen auf dem server
+	 * @param c Controller um mit der anderen Verbindung comunizieren zu können
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	public POSTConection(String url, String dbname, String uname, String pwd,Controller c) throws ClassNotFoundException, SQLException{
 		this.url = "jdbc:postgresql://" + url + "/" + dbname;
 		this.uname = uname;

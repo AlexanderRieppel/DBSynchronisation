@@ -15,7 +15,11 @@ import javax.sql.rowset.JdbcRowSet;
 import Controller.Controller;
 
 
-
+/**
+ * Conection für eine MySQL Datenbank
+ * @author Dominik Backhasuen
+ * @version 0.1
+ */
 public class MYSQLConection implements Conection{
 	private String jdriv = "com.mysql.jdbc.Driver", url, uname , pwd, dbname;
 	private ArrayList<String> tab = new ArrayList<String>();
@@ -27,7 +31,16 @@ public class MYSQLConection implements Conection{
 	private Controller c;
 	
 	private boolean connected = false;
-	
+	/**
+	 * Konstruktor zum erstellen einer MySQL Conection
+	 * @param url IP-addresse oder Hostname des Datenbank Servers
+	 * @param dbname Datenbank name
+	 * @param uname benutzername zum einloggen auf dem server
+	 * @param pwd passwort zum einloggen auf dem server
+	 * @param c Controller um mit der anderen Verbindung comunizieren zu können
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	public MYSQLConection(String url, String dbname, String uname, String pwd,Controller c) {
 		this.url = "jdbc:mysql://" + url + "/" + dbname;
 		this.uname = uname;
